@@ -18,7 +18,14 @@ app.register_blueprint(user_blue)
 
 # 各项插件配置
 app.config['SECRET_KEY'] = 'leon'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@localhost/leonauto'
+USERNAME = 'root'
+PASSWORD = '123456'
+HOST = '127.0.0.1'
+PORT = '3306'
+DATABASE = 'leonauto'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8'.format(
+    USERNAME, PASSWORD, HOST, PORT, DATABASE
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy()
 db.init_app(app)

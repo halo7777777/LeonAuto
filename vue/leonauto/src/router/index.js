@@ -34,12 +34,14 @@ const routes = [
       {path: "/welcome", component: Welcome},
       {path: "/account", component: Account},
       {path: "/tec/card", component: Card},
-    ]
+    ],
+    meta:{requireAdmin: true}
   },
   {
     path: '/UserHome',
     name: 'UserHome',
-    component: UserHome
+    component: UserHome,
+    meta:{requireUser: true}
   }
 ]
 

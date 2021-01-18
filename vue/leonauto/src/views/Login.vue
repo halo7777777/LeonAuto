@@ -108,7 +108,7 @@ export default
                     url = "Admin"
                 }
                 const {data:res} = await this.$http.post("/" + url + "Login", this.loginForm);
-                if(res.data === "ok")
+                if(res.errmsg === "ok")
                 {
                     window.sessionStorage.setItem(url + "Token", res.token)
                     this.$message.success("登录成功");   // 信息提示

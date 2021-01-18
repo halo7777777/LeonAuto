@@ -70,10 +70,10 @@ def login_required(f):
     def wrapper(*args, **kwargs):
         token = request.headers.get("Authorization", default=None)
         if not token:
-            return 'not Login','403 Permission Denied'
+            return jsonify({'errno':118, 'errmsg': 'invalid_authorization_code'}), '400 ERR'
         username = identify(token)
         if not username:
-            return 'not Login','403 Permission Denied'
+            return jsonify({'errno':118, 'errmsg': 'invalid_authorization_code'}), '400 ERR'
         return f(*args, **kwargs)
     return wrapper
 
