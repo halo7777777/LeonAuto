@@ -6,7 +6,7 @@ from functools import wraps
 
 key = "leonwuhuqifei" # secret私钥,可通过配置文件导入
 
-def generate_access_token(username: str = "", algorithm: str = 'HS256', exp: float = 2):
+def generate_access_token(username: str = "", algorithm: str = 'HS256', exp: float = 24):
     """
     生成access_token
     :param username: 用户名(自定义部分)

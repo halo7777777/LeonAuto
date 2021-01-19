@@ -4,6 +4,8 @@ from admin import admin_blue
 from user import user_blue
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
+from flask_apscheduler import APScheduler
+import platform, atexit
 
 __author__ = 'leon'
 
@@ -27,9 +29,64 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=
     USERNAME, PASSWORD, HOST, PORT, DATABASE
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-db = SQLAlchemy()
+db = SQLAlchemy(app)
 db.init_app(app)
+
+#APscheduler配置任务
+scheduler = APScheduler()
+app.config.update(
+    {
+        "SCHEDULER_API_ENABLED": True,
+        "SCHEDULER_TIMEZONE": "Asia/Shanghai",
+        "JOBS": 
+        [
+            {
+                "id": "card",
+                "func": "admin:tec.card",
+                "trigger": "interval",
+                "seconds": 5
+            }
+        ]
+    }
+)
+
+# 保证apschedule只执行一次
+if platform.system() != 'Windows':
+    fcntl = __import__("fcntl")
+    f = open('scheduler.lock', 'wb')
+    try:
+        fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        scheduler.init_app(app)
+        scheduler.start()
+        app.logger.debug('Scheduler Started,---------------')
+    except:
+        pass
+
+    def unlock():
+        fcntl.flock(f, fcntl.LOCK_UN)
+        f.close()
+
+    atexit.register(unlock)
+else:
+    msvcrt = __import__('msvcrt')
+    f = open('scheduler.lock', 'wb')
+    try:
+        msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+        scheduler.init_app(app)
+        scheduler.start()
+        app.logger.debug('Scheduler Started,----------------')
+    except:
+        pass
+
+    def _unlock_file():
+        try:
+            f.seek(0)
+            msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+        except:
+            pass
+
+    atexit.register(_unlock_file)
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=9090)
+    app.run(debug=False, port=9090)

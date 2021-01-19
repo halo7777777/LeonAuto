@@ -11,3 +11,16 @@ class User(db.Model):
         # 转json
         return dict((col.name, getattr(self, col.name)) \
         for col in class_mapper(self.__class__).mapped_table.c)
+
+
+class Card(db.Model):
+    __tablename__ = 'card'
+    id = db.Column(db.String(45), primary_key=True)
+    email = db.Column(db.String(45), nullable=False)
+    CardOn = db.Column(db.Boolean, nullable=False)
+    EmailOn = db.Column(db.Boolean, nullable=False)
+
+    def as_dict(self):
+        # 转json
+        return dict((col.name, getattr(self, col.name)) \
+        for col in class_mapper(self.__class__).mapped_table.c)

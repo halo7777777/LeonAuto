@@ -20,7 +20,6 @@ new Vue({
 router.beforeEach((to, from, next)=>{
   const AdminToken = window.sessionStorage.getItem('AdminToken')
   const UserToken = window.sessionStorage.getItem('UserToken')
-
   var accessToken = null
   if(AdminToken)
     accessToken = AdminToken
@@ -66,6 +65,7 @@ router.beforeEach((to, from, next)=>{
   }
   else if(!accessToken && to.path !== '/login')
   {
+    console.log(777)
     // 未登录
     next('/login')
   }

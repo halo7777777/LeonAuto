@@ -29,8 +29,9 @@ instance.interceptors.response.use(
       return response;
     },
     error => {
+      if(!error.response)
+      Message({showClose:true, message:'服务器请求超时，请稍后再试', type:'error', duration:3000})
       if(error.response){
-        console.log(error.response.data);
         switch(error.response.data.errno){
           case 118:
             // 返回118 清除token信息并跳转到登录页面
@@ -40,10 +41,10 @@ instance.interceptors.response.use(
               query: {redirect: router.currentRoute.fullPath}   // 重新登录后，返回之前的页面
             })
             Message({showClose:true, message:'未登录，返回登陆界面', type:'error', duration:3000})  
-     
         }
+        return Promise.resolve(error.response.data)
       }
-      return Promise.resolve(error.response);  // 返回接口的错误信息
+      return Promise.reject(error);  // 返回接口的错误信息
     }
   )
   

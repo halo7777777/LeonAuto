@@ -24,7 +24,7 @@
         </el-form>
 
         <!-- 列表 -->
-        <el-table :data="tempList":fit="true" :show-header="true"
+        <el-table :data="tempList" :fit="true" :show-header="true"
                   :default-sort = "{prop: 'id', order: 'descending'}" :border="true" max-height="430" v-loading = "loading">
             <el-table-column prop="id" label="用户账号" align="center">
             </el-table-column>
@@ -113,13 +113,7 @@
 
                 /* 暂时填充用户列表 */
                 UserList:
-                    [
-                        {
-                            id: 'halo7',
-                            password: '7777777',
-                            name: '福建',
-                        },
-                    ],
+                    [],
 
                 /* 新建页面样式 */
                 NewForm: {
@@ -242,7 +236,7 @@
                 this.$refs.NewFormRef.validate(async valid => {
                     if (valid) {
                         const {data:res} = await this.$http.post("/UserNew", this.NewForm);
-                        if (res.errmsg === "ok")
+                        if (res && res.errmsg === "ok")
                         {
                             await this.getList();
                             this.$message({
@@ -268,7 +262,7 @@
                 this.$refs.ModifyFormRef.validate(async valid => {
                     if (valid) {
                         const {data:res} = await this.$http.put("/UserEdit", this.ModifyForm);
-                        if (res.errmsg === "ok")
+                        if (res && res.errmsg === "ok")
                         {
                             await this.getList();
                             this.$message({
@@ -300,7 +294,7 @@
                 .then(async () => {
                     // 删除
                     const {data:res} = await this.$http.delete("/UserDelete", {data: row.id});
-                    if (res.errmsg === 'ok')
+                    if (res && res.errmsg === 'ok')
                     {
                         this.$message({
                             type: 'success',

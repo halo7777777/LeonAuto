@@ -21,7 +21,7 @@ def AdminLogin():
 @login_required
 def SearchUser():
     username = request.values.get('id')
-    if(username == ''):
+    if username == '':
         users = models.User.query.all()
     else:
         users = models.User.query.filter_by(id=username).all()
@@ -40,7 +40,7 @@ def UserNew():
 
     user_exist = models.User.query.filter_by(id=username).first()
 
-    if(user_exist != None):
+    if user_exist != None:
         return jsonify({'errno': 126, 'errmsg': 'user_existed'}), '400 ERR'
     else:
         new_user = models.User(id=username, password=password, name=name)
@@ -57,7 +57,7 @@ def UserEdit():
     name = request.json.get('name')
 
     user_exist = models.User.query.filter_by(id=username).first()
-    if(user_exist == None):
+    if user_exist == None:
         return jsonify({'errno': 121, 'errmsg': 'invalid_user'}), '400 ERR'
     else:
         user_exist.password = password
@@ -73,7 +73,7 @@ def UserDelete():
     username = request.data.decode('utf-8')
     print(username)
     user_delete = models.User.query.filter_by(id=username).first()
-    if(user_delete == None):
+    if user_delete == None:
         return jsonify({'errno': 121, 'errmsg': 'invalid_user'}), '400 ERR'
     else:
         db.session.delete(user_delete)
